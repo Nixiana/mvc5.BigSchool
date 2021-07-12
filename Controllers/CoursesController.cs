@@ -80,5 +80,23 @@ namespace BigSchool.Controllers
 
             return View(courses);
         }
+
+        [Authorize]
+        public ActionResult Edit(int id)
+        {
+            var userId = User.Identity.GetUserId();
+            var courses = _dbContext.Courses.Single(c => c.Id == id && c.LecturerId == userId);
+            var viewModel = new CourseViewModel
+            {
+                Categories = _dbContext.Categories.ToList(),
+                Date = courses.DateTime.ToString("dd/M/yyyy"),
+                Time = courses.DateTime.ToString("HH:mm"),
+                Category = courses.CategoryId,
+                Place = courses.Place
+            };
+            return View("Create", viewModel);
+        }
+
+
     }
 }
